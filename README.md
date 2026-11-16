@@ -43,7 +43,7 @@ Penggunaan named volume bertujuan agar file CV yang telah diunggah tetap tersimp
 Dengan demikian, data file CV tidak hilang ketika container aplikasi dibuat ulang.
 
 💻 Cara Menjalankan di Komputer Lokal
-- Menjalankan Automated Test
+Menjalankan Automated Test
 Sebelum menjalankan aplikasi, lakukan pengujian untuk memastikan seluruh fitur dan aturan bisnis berjalan sesuai kebutuhan.
 Sesuaikan perintah berikut dengan framework backend yang digunakan.
 
