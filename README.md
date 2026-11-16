@@ -43,27 +43,23 @@ Penggunaan named volume bertujuan agar file CV yang telah diunggah tetap tersimp
 Dengan demikian, data file CV tidak hilang ketika container aplikasi dibuat ulang.
 
 💻 Cara Menjalankan di Komputer Lokal
-1. Menjalankan Automated Test
+- Menjalankan Automated Test
 Sebelum menjalankan aplikasi, lakukan pengujian untuk memastikan seluruh fitur dan aturan bisnis berjalan sesuai kebutuhan.
 Sesuaikan perintah berikut dengan framework backend yang digunakan.
 
 Node.js (Express.js):
-bash
 npm install
 npm test
 
 Laravel:
-bash
 composer install
 php artisan test
 
 Python (FastAPI):
-bash
 pip install -r requirements.txt
 pytest
 
 Spring Boot:
-bash
 mvn test
 
 Pastikan seluruh automated test berhasil sebelum melanjutkan ke tahap deployment.
