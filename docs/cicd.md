@@ -62,6 +62,14 @@ Jangan taruh Ngrok authtoken, GitHub token, webhook secret, atau URL bertoken di
 
 ## Jenkins permanen di server
 
+### Akses dari perangkat lain tanpa VPS
+
+Ngrok menetapkan satu dev domain gratis untuk akun dan endpoint `ngrok http 8080` menggunakannya otomatis; domain itu tetap sama saat agent dimulai ulang. Jadi browser di perangkat lain dapat memakai URL Ngrok yang sama tanpa memasang Jenkins di perangkat client. Jalankan `scripts/install-local-ci-startup.ps1` sekali di PC host untuk memasang task Windows yang menunggu Docker Desktop, memastikan Jenkins aktif, lalu menjalankan Ngrok di latar belakang. Log startup tersimpan di `%LOCALAPPDATA%\KerjaYuk\local-ci-startup.log`.
+
+PC host harus tetap menyala, terhubung ke internet, dan akun Windows tetap login. Ini membuat Jenkins mudah diakses lintas perangkat, tetapi bukan hosting 24/7 jika PC host mati. Hapus task otomatis dengan `Unregister-ScheduledTask -TaskName 'KerjaYuk Local CI' -Confirm:$false`. Dev domain gratis tetap memiliki batas pemakaian bulanan; lihat [batas Free plan Ngrok](https://ngrok.com/docs/pricing-limits).
+
+### Hosting tanpa bergantung pada PC
+
 Jenkins di komputer lokal hanya tersedia saat komputer dan Docker Desktop aktif. Agar dapat dibuka dari perangkat lain kapan saja, jalankan stack ini pada Linux VPS/server yang selalu aktif dan gunakan domain tetap. Konfigurasi `compose.server.yaml` menambahkan Caddy sebagai reverse proxy HTTPS untuk Jenkins dan aplikasi; data Caddy, Jenkins, PostgreSQL, serta CV memakai named volume. Port Jenkins `8080` dan aplikasi `8000` hanya terikat ke loopback; akses web dari internet masuk melalui port 80/443.
 
 Siapkan server Linux dengan Docker Compose, domain dengan DNS A/AAAA menuju IP server, serta firewall yang membuka port 80/443 dan SSH terbatas untuk admin. Di server, clone repo, salin `.env.example` menjadi `.env`, isi password database yang kuat, salin `.env.server.example` menjadi `.env.server`, lalu ganti kedua domain dengan hostname yang benar. Jalankan:
