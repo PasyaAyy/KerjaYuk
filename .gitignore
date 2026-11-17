@@ -5,3 +5,7 @@ __pycache__/
 .pytest_cache/
 .coverage
 data/
+*.db
+*.sqlite
+htmlcov/
+*.xml
