@@ -32,9 +32,9 @@ Email `noreply` dapat dilihat di **GitHub Settings → Emails**. Alamat commit y
 
 ## Terbitkan baseline, lalu kirim pekerjaan satu per satu
 
-Baseline proyek sudah dipush ke branch `chore/kerjayuk-project-baseline` dan tersedia sebagai PR #1 ke `main`. Saat status ini dicatat, PR masih terbuka; `main` belum berisi baseline tersebut. Jangan mengganti author commit atau mengatasnamakan perubahan anggota lain. Setiap anggota harus membuat perubahan nyata di area tugasnya dan commit dengan akun GitHub sendiri.
+Baseline proyek sudah masuk ke `main` melalui PR #1. Jangan mengganti author commit atau mengatasnamakan perubahan anggota lain. Setiap anggota harus membuat perubahan nyata di area tugasnya dan commit dengan akun GitHub sendiri.
 
-Langkah berikutnya adalah meminta pemilik repo `PasyaAyy` meninjau dan menggabungkan PR #1. Akun `garda05` memiliki akses push tetapi tidak memiliki izin admin/merge pada repo ini. Setelah baseline masuk ke `main`, anggota bekerja berurutan dari `main` terbaru dan mengirim PR ke `main`.
+Anggota dapat mulai dari `main` terbaru dan mengirim PR ke `main`. Pemilik repo `PasyaAyy` mengelola undangan kolaborator dan pengaturan repo seperti webhook; akun `garda05` memiliki akses push, tetapi bukan admin. Setiap anggota tetap harus meninjau dan menggabungkan hanya perubahan yang mereka setujui.
 
 ```sh
 git fetch origin
@@ -96,9 +96,9 @@ Lihat [panduan GitHub tentang grafik kontributor repo](https://docs.github.com/e
 
 Status terakhir diperiksa pada 17 November 2026:
 
-- PR #1 (`chore/kerjayuk-project-baseline` ke `main`) sudah digabung. Branch default GitHub dan checkout lokal sekarang `main` pada commit `57decfe8d38fc9599b578d9e3fdf6b8c2d9d122f`.
+- PR #1 (`chore/kerjayuk-project-baseline` ke `main`) dan PR #2 (`docs/ci-crosscheck-status` ke `main`) sudah digabung. Branch default GitHub dan checkout lokal sekarang `main` pada commit `bb3bbfd89e565c8ea174f7f99b34af67a7c1f2c0`.
 - Grafik kontributor GitHub saat ini menampilkan `garda05` dan `PasyaAyy`. Anggota Tech Lead/Backend dan Container Engineer belum tercatat; masing-masing perlu membuat perubahan nyata dengan akun sendiri, lalu mengirim PR ke `main` dan menunggu merge. Jangan membuat commit atas nama mereka.
-- Jenkins Multibranch Pipeline menemukan branch `main`. Build `main` #1 pada commit yang sama berstatus `SUCCESS`; Stage View menunjukkan Checkout, Install test dependencies, Lint, Test, Build project report, Build container, dan Post Actions lulus. Tes Jenkins tidak melaporkan kegagalan dan `docs/laporan.pdf` tersedia sebagai artefak.
+- Jenkins Multibranch Pipeline menemukan branch `main`. Build `main` #2 pada commit yang sama berstatus `SUCCESS`; Stage View menunjukkan Checkout, Install test dependencies, Lint, Test, Build project report, Build container, dan Post Actions lulus. Tes Jenkins tidak melaporkan kegagalan dan `docs/laporan.pdf` tersedia sebagai artefak.
 - Tahap `Deploy with Docker Compose` dilewati karena parameter `DEPLOY` default-nya `false`. Ini sesuai konfigurasi; belum ada deploy ke VPS atau hosting publik.
 - Pemindaian berkala Jenkins sudah aktif setiap 5 menit sebagai cadangan karena pemindaian yang terpicu webhook belum terbukti berjalan otomatis setelah merge. Log pemindaian terakhir berakhir `Finished: SUCCESS` dan menemukan `main` pada commit merge.
 - Credential GitHub Jenkins hanya punya akses baca untuk scan. Pipeline sukses, tetapi GitHub menolak publikasi commit status dengan HTTP 403; izin status tidak diperlukan untuk build Jenkins berjalan.
