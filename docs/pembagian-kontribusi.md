@@ -104,7 +104,7 @@ Audit terakhir: 17 November 2026, setelah PR #4 digabung.
 - Jenkins memindai branch berkala setiap menit sebagai fallback. Build berhasil tanpa webhook, tetapi pengiriman webhook push GitHub belum terkonfirmasi: inspector Ngrok hanya menunjukkan request UI Jenkins, tidak ada POST ke `/github-webhook/`.
 - Ngrok gratis berjalan di PC ini dan URL-nya dapat berubah saat tunnel dimulai ulang. Akun `garda05` bukan admin repo, jadi owner/admin perlu memeriksa **Settings > Webhooks > Recent Deliveries** dan memastikan URL mengarah ke tunnel aktif dengan path `/github-webhook/`, event `Pushes`, serta delivery HTTP 200. Jangan mengganti secret jika delivery sudah cocok.
 - Credential scan GitHub Jenkins bersifat read-only. GitHub menolak publikasi commit status dengan HTTP 403; hal ini tidak menghentikan pipeline Jenkins.
-- Tahap deploy publik tidak dijalankan (`DEPLOY=false`) karena belum ada VPS/domain. Aplikasi belum memiliki autentikasi; jalankan lokal dan jangan diekspos ke internet.
+- Tahap deploy Compose bersifat opt-in dan dilewati bila parameter `DEPLOY=false`.
 
 ## Sisa yang wajib dilakukan tim
 
