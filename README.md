@@ -1,65 +1,61 @@
-KerjaYuk – Portal Lowongan Magang & Kerja Paruh Waktu
-Tugas Besar 1 Komputasi Awan (DevOps & CI/CD Pipeline Jenkins)
+# KerjaYuk
 
-Studi Kasus: K09 – KerjaYuk
-👥 Anggota Kelompok & Pembagian Peran
-Nama Anggota	NIM	Peran Utama	Tanggung Jawab Utama
-Muhammad Brilliant Agung Wicaksono	[102062400126]	Tech Lead / Backend	Struktur project, REST API, aturan bisnis, dan migrasi database
-Ahmad Nurtajalla Garda Islam [102062400012]	DevOps Engineer	Setup Jenkins, Webhook Ngrok, Credentials, dan Jenkinsfile
-Muhammad Naufal Syamdany	[102062400100]	Container Engineer	Dockerfile multi-stage, compose.yaml (3 service), dan .env
-Pasya Ayu Rastiti	[102062400004]	QA & Tech Writer	Automated testing (minimal 5 test), laporan PDF, dan README.md
+Portal lowongan magang dan kerja paruh waktu untuk Tugas Besar 1 Komputasi Awan (DevOps & CI/CD Pipeline Jenkins), studi kasus K09.
 
-🛠️ Tech Stack
-Teknologi yang digunakan dalam pengembangan aplikasi KerjaYuk:
-Backend Framework: [Contoh: Express.js / Laravel / FastAPI / Spring Boot]
-Database: [Contoh: PostgreSQL / MySQL]
-Reverse Proxy: Nginx (Front-facing port 8000)
-Containerization: Docker & Docker Compose
-CI/CD Pipeline: Jenkins + GitHub Webhook (via Ngrok)
+> **Status:** backend MVP dan konfigurasi Docker awal tersedia. Rancangan lengkap ada di [`docs/architecture.md`](docs/architecture.md).
 
-🚀 Fitur Utama & Aturan Bisnis
-Fitur Wajib
-CRUD Perusahaan & Lowongan: Pengelolaan data perusahaan dan posting lowongan pekerjaan.
-Pencarian & Filter: Pencarian lowongan berdasarkan lokasi, tipe pekerjaan, dan kata kunci.
-Unggah CV & Melamar: Pengiriman lamaran pekerjaan dengan melampirkan file CV.
-Manajemen Status: Pembaruan status lamaran dengan alur DIKIRIM → DITINJAU → DITERIMA / DITOLAK.
-Health Check Endpoint: Endpoint GET /health untuk memverifikasi kondisi server dan koneksi database.
+## Tim
 
+| Nama | NIM | Peran | Tanggung jawab |
+| --- | --- | --- | --- |
+| Muhammad Brilliant Agung Wicaksono | 102062400126 | Tech Lead / Backend | Struktur project, REST API, aturan bisnis, dan migrasi database |
+| Ahmad Nurtajalla Garda Islam | 102062400012 | DevOps Engineer | Setup Jenkins, webhook Ngrok, credentials, dan Jenkinsfile |
+| Muhammad Naufal Syamdany | 102062400100 | Container Engineer | Dockerfile multi-stage, compose.yaml (3 service), dan .env |
+| Pasya Ayu Rastiti | 102062400004 | QA & Tech Writer | Automated testing (minimal 5 test), laporan PDF, dan README.md |
 
-🗒️ Aturan Bisnis yang Dites (Automated Testing)
-Berikut adalah aturan bisnis yang harus divalidasi melalui automated testing:
-Validasi Berkas CV
-Sistem hanya menerima file CV berformat PDF dengan ukuran maksimal 2 MB.
-Anti-Double Apply
-Pelamar tidak diperbolehkan mengirimkan lamaran lebih dari satu kali pada lowongan pekerjaan yang sama.
-Kadaluarsa Lowongan
-Lowongan yang telah melewati batas tanggal berlaku secara otomatis ditutup dan tidak dapat menerima lamaran baru.
-Validasi Alur Status
-Perubahan status lamaran harus mengikuti alur transisi yang valid, yaitu DIKIRIM → DITINJAU → DITERIMA atau DITOLAK.
+## Teknologi pilihan awal
 
-📌 Volume Upload Persisten
-File CV dalam format PDF disimpan menggunakan Docker Named Volume bernama cv_data_volume.
-Penggunaan named volume bertujuan agar file CV yang telah diunggah tetap tersimpan dengan aman dan dapat diakses kembali meskipun terjadi proses restart, penghapusan, maupun re-deploy container.
-Dengan demikian, data file CV tidak hilang ketika container aplikasi dibuat ulang.
+- Backend API: Python 3.12 dan FastAPI
+- Database: PostgreSQL
+- Reverse proxy: Nginx, port depan 8000
+- Container: Docker dan Docker Compose
+- CI/CD: Jenkins dan GitHub Webhook melalui Ngrok
+- Detail arsitektur, skema data, dan rancangan endpoint: [`docs/architecture.md`](docs/architecture.md)
 
-💻 Cara Menjalankan di Komputer Lokal
-Menjalankan Automated Test
-Sebelum menjalankan aplikasi, lakukan pengujian untuk memastikan seluruh fitur dan aturan bisnis berjalan sesuai kebutuhan.
-Sesuaikan perintah berikut dengan framework backend yang digunakan.
+## Fitur wajib
 
-Node.js (Express.js):
-npm install
-npm test
+- CRUD perusahaan dan lowongan kerja.
+- Pencarian lowongan berdasarkan lokasi, tipe pekerjaan, dan kata kunci.
+- Pengiriman lamaran dengan lampiran CV.
+- Pengelolaan status lamaran dengan alur `DIKIRIM` → `DITINJAU` → `DITERIMA` atau `DITOLAK`.
+- Endpoint `GET /health` untuk memeriksa server dan koneksi database.
 
-Laravel:
-composer install
-php artisan test
+## Aturan bisnis yang perlu diuji
 
-Python (FastAPI):
-pip install -r requirements.txt
-pytest
+- CV harus berupa PDF dengan ukuran maksimal 2 MB.
+- Pelamar hanya dapat melamar satu kali pada lowongan yang sama.
+- Lowongan yang sudah melewati tanggal berlaku tidak menerima lamaran baru.
+- Perubahan status lamaran harus mengikuti alur yang ditentukan.
+- Automated test mencakup minimal lima test.
 
-Spring Boot:
-mvn test
+## Penyimpanan CV
 
-Pastikan seluruh automated test berhasil sebelum melanjutkan ke tahap deployment.
+CV disimpan dalam Docker named volume `cv_data_volume` agar tetap tersedia setelah container dimulai ulang atau dibuat ulang.
+
+## Menjalankan dengan Docker Compose
+
+Salin `.env.example` menjadi `.env`, lalu jalankan:
+
+```sh
+docker compose up --build -d
+```
+
+API tersedia di `http://localhost:8000`; dokumentasi interaktif ada di `http://localhost:8000/docs`. Untuk menghentikan layanan, jalankan `docker compose down`. Data database dan CV tetap berada di named volume. Jangan gunakan password contoh di `.env` untuk deployment.
+
+## Endpoint yang tersedia
+
+- `GET /health`
+- CRUD perusahaan pada `/api/v1/companies`
+- CRUD dan pencarian lowongan pada `/api/v1/jobs`
+- Pengajuan dan daftar lamaran pada `/api/v1/jobs/{job_id}/applications`
+- Pembaruan status pada `/api/v1/applications/{application_id}/status`
