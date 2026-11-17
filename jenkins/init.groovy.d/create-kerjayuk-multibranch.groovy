@@ -1,5 +1,7 @@
 import java.util.EnumSet
 
+import org.jenkinsci.plugins.github_branch_source.ApiRateLimitChecker
+import org.jenkinsci.plugins.github_branch_source.GitHubConfiguration
 import jenkins.branch.BranchSource
 import jenkins.model.Jenkins
 import jenkins.scm.api.mixin.ChangeRequestCheckoutStrategy
@@ -9,6 +11,13 @@ import org.jenkinsci.plugins.github_branch_source.OriginPullRequestDiscoveryTrai
 import org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject
 
 def jenkins = Jenkins.get()
+
+def githubConfiguration = GitHubConfiguration.get()
+if (githubConfiguration.getApiRateLimitChecker() != ApiRateLimitChecker.ThrottleOnOver) {
+    githubConfiguration.setApiRateLimitChecker(ApiRateLimitChecker.ThrottleOnOver)
+    println('Configured GitHub API throttling to wait only near the rate limit.')
+}
+
 def projectName = 'KerjaYuk'
 def project = jenkins.getItem(projectName)
 
