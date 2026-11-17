@@ -3,4 +3,8 @@
 __pycache__
 *.py[cod]
 .env
+.env.server
 tests
+.venv
+.git
+KerjaYuk.figcraft

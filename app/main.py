@@ -5,13 +5,14 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
 from app import models  # noqa: F401 - registers models with Base metadata
-from app.database import Base, engine, get_db
+from app.database import engine
+from app.migrations import upgrade_database
 from app.routes import router
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    Base.metadata.create_all(bind=engine)
+    upgrade_database(engine)
     yield
 
 

@@ -69,6 +69,7 @@ Ketentuan skema:
 - `employment_type` menggunakan nilai tetap yang disepakati API (MVP: `MAGANG`, `PARUH_WAKTU`, `PENUH_WAKTU`).
 - Lowongan dianggap terbuka jika `expires_at` belum terlewati. Tidak perlu job terjadwal untuk menutupnya: daftar lowongan dan endpoint lamaran memeriksa tanggal tersebut.
 - CV diberi nama penyimpanan unik; API hanya menerima PDF hingga 2 MB dan menyimpan path relatif di database.
+- Skema database dikelola Alembic. API menerapkan migrasi yang belum berjalan saat startup; database MVP lama yang sudah memiliki keempat tabel inti diadopsi oleh migrasi awal tanpa menghapus datanya.
 
 ## Rancangan endpoint
 

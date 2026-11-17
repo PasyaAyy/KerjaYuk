@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#fff4f6" />
+    <meta name="description" content="Temukan lowongan magang dan kerja paruh waktu yang cocok dengan langkah kariermu di KerjaYuk." />
+    <title>KerjaYuk — Temukan kerja yang cocok buatmu</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav shell" aria-label="Navigasi utama">
+        <a class="wordmark" href="#beranda" aria-label="KerjaYuk, beranda">Kerja<span>Yuk</span><i></i></a>
+        <div class="nav-links">
+          <a href="#lowongan">Cari Lowongan</a>
+          <button class="link-button" id="open-job-form">Untuk Perusahaan</button>
+          <a href="#cara-kerja">Cara Kerja</a>
+        </div>
+        <button class="button button-dark button-small" id="nav-post-job">Pasang Lowongan <span aria-hidden="true">↗</span></button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Buka navigasi" aria-expanded="false">☰</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="beranda">
+        <div class="hero-inner shell">
+          <div class="hero-copy">
+            <p class="eyebrow">PLATFORM KARIER UNTUK GENERASI BERIKUTNYA</p>
+            <h1>Temukan kerja<br />yang cocok buatmu<span class="red-period">.</span></h1>
+            <p class="hero-lede">Peluang magang dan kerja paruh waktu dari perusahaan pilihan. Mulai langkah berikutnya, dengan cara yang lebih mudah.</p>
+            <form class="search-panel" id="search-form" role="search">
+              <label class="search-field">
+                <span>Posisi atau kata kunci</span>
+                <input id="search-query" name="q" type="search" placeholder="Contoh: UI Designer" />
+              </label>
+              <label class="search-field location-field">
+                <span>Lokasi</span>
+                <input id="search-location" name="location" type="search" placeholder="Kota atau remote" />
+              </label>
+              <button class="button button-dark search-submit" type="submit">Cari Lowongan <span aria-hidden="true">→</span></button>
+            </form>
+            <div class="popular-searches" aria-label="Pencarian populer">
+              <span>Populer:</span>
+              <button class="pill" data-query="MAGANG">Magang</button>
+              <button class="pill" data-query="PARUH_WAKTU">Paruh waktu</button>
+              <button class="pill" data-location="Remote">Remote</button>
+            </div>
+          </div>
+          <aside class="opportunity-card" aria-label="Sorotan peluang">
+            <p class="eyebrow red-eyebrow">PILIHAN MINGGU INI</p>
+            <h2>Peluang pertama bisa membuka banyak pintu.</h2>
+            <div class="card-rule"></div>
+            <div class="opportunity-note"><span class="spark">✳</span><p><strong>Mulai dari pengalaman.</strong><br />Temukan tim yang siap tumbuh bersamamu.</p></div>
+            <a href="#lowongan" class="text-link">Jelajahi peluang <span aria-hidden="true">→</span></a>
+            <span class="orbit orbit-one" aria-hidden="true">Magang</span>
+            <span class="orbit orbit-two" aria-hidden="true">Remote</span>
+          </aside>
+        </div>
+      </section>
+
+      <section class="stats-band" aria-label="Sekilas KerjaYuk">
+        <div class="stats-inner shell">
+          <p class="eyebrow stats-eyebrow">LANGKAH KECIL, PELUANG BESAR</p>
+          <div class="stats-grid">
+            <div><strong id="job-count">—</strong><span>lowongan aktif untuk dijelajahi</span></div>
+            <div><strong id="company-count">—</strong><span>perusahaan bertumbuh</span></div>
+            <div><strong>3 menit</strong><span>untuk menemukan peluangmu</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="jobs-section shell" id="lowongan">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow red-eyebrow">PELUANG YANG DIPILIH UNTUKMU</p>
+            <h2>Mulai dari peluang<br />berikutnya.</h2>
+            <p class="muted">Lowongan aktif untuk berbagai tahap karier.</p>
+          </div>
+          <p class="result-count" id="result-count" aria-live="polite">Memuat lowongan…</p>
+        </div>
+        <div class="job-layout">
+          <aside class="filters" aria-label="Filter lowongan">
+            <div class="filter-heading"><h3>Filter lowongan</h3><button class="link-button red-text" id="reset-filters">Reset</button></div>
+            <label class="filter-label" for="filter-location">LOKASI</label>
+            <input class="text-input" id="filter-location" type="search" placeholder="Semua lokasi" />
+            <div class="filter-divider"></div>
+            <fieldset class="type-filter">
+              <legend class="filter-label">TIPE PEKERJAAN</legend>
+              <label><input type="checkbox" value="MAGANG" /> <span>Magang</span></label>
+              <label><input type="checkbox" value="PARUH_WAKTU" /> <span>Paruh waktu</span></label>
+              <label><input type="checkbox" value="PENUH_WAKTU" /> <span>Penuh waktu</span></label>
+            </fieldset>
+            <button class="button button-dark apply-filter" id="apply-filters">Terapkan Filter</button>
+          </aside>
+          <div class="results-column">
+            <div class="results-toolbar">
+              <div class="result-tabs" role="group" aria-label="Tipe pekerjaan cepat">
+                <button class="tab active" data-type="">Semua</button>
+                <button class="tab" data-type="MAGANG">Magang</button>
+                <button class="tab" data-type="PARUH_WAKTU">Paruh waktu</button>
+              </div>
+              <label class="sort-control">Urutkan
+                <select id="sort-jobs" aria-label="Urutkan lowongan">
+                  <option value="relevant">Paling relevan</option>
+                  <option value="newest">Paling baru</option>
+                  <option value="ending">Segera berakhir</option>
+                </select>
+              </label>
+            </div>
+            <div class="job-list" id="job-list" aria-live="polite" aria-busy="true"></div>
+            <div class="load-error" id="load-error" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="how-section shell" id="cara-kerja">
+        <div><p class="eyebrow red-eyebrow">LANGKAHMU BERIKUTNYA</p><h2>Kesempatan baik<br />dimulai dari langkah pertama.</h2></div>
+        <div class="how-copy"><p>Pilih pekerjaan yang sesuai, kenali timnya, lalu kirim lamaranmu. Tidak perlu menunggu sempurna untuk memulai.</p><button class="button button-red" id="browse-jobs">Jelajahi Lowongan <span aria-hidden="true">→</span></button></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner shell">
+        <a class="wordmark footer-wordmark" href="#beranda">Kerja<span>Yuk</span><i></i></a>
+        <p>Mulai langkah kariermu bersama KerjaYuk.</p>
+        <a href="/docs" target="_blank" rel="noreferrer">Dokumentasi API <span aria-hidden="true">↗</span></a>
+      </div>
+    </footer>
+
+    <dialog class="modal" id="apply-dialog" aria-labelledby="apply-title">
+      <form class="modal-form" id="apply-form" enctype="multipart/form-data">
+        <button class="modal-close" type="button" data-close aria-label="Tutup">×</button>
+        <p class="eyebrow red-eyebrow">SATU LANGKAH LAGI</p>
+        <h2 id="apply-title">Kirim lamaran</h2>
+        <p class="modal-subtitle" id="apply-job-title"></p>
+        <label>Nama lengkap<input name="name" required maxlength="200" autocomplete="name" /></label>
+        <label>Email<input name="email" type="email" required maxlength="320" autocomplete="email" /></label>
+        <label>CV (PDF, maksimal 2 MB)<input name="cv" type="file" accept="application/pdf,.pdf" required /></label>
+        <p class="form-message" id="apply-message" role="status"></p>
+        <button class="button button-dark modal-submit" type="submit">Kirim Lamaran</button>
+      </form>
+    </dialog>
+
+    <dialog class="modal" id="job-dialog" aria-labelledby="job-dialog-title">
+      <form class="modal-form" id="job-form">
+        <button class="modal-close" type="button" data-close aria-label="Tutup">×</button>
+        <p class="eyebrow red-eyebrow">UNTUK PERUSAHAAN</p>
+        <h2 id="job-dialog-title">Pasang lowongan</h2>
+        <p class="modal-subtitle">Lengkapi detail peluang yang ingin kamu bagikan.</p>
+        <label>Perusahaan<select name="company_id" id="company-select" required></select></label>
+        <div class="new-company-fields" id="new-company-fields" hidden>
+          <label>Nama perusahaan<input name="company_name" maxlength="200" /></label>
+          <label>Lokasi perusahaan<input name="company_location" maxlength="200" /></label>
+        </div>
+        <label>Judul lowongan<input name="title" required maxlength="200" /></label>
+        <label>Deskripsi<textarea name="description" required rows="4"></textarea></label>
+        <div class="form-row">
+          <label>Lokasi pekerjaan<input name="location" required maxlength="200" placeholder="Jakarta atau Remote" /></label>
+          <label>Tipe pekerjaan<select name="employment_type" required><option value="MAGANG">Magang</option><option value="PARUH_WAKTU">Paruh waktu</option><option value="PENUH_WAKTU">Penuh waktu</option></select></label>
+        </div>
+        <label>Batas lamaran<input name="expires_at" type="date" required /></label>
+        <p class="form-message" id="job-message" role="status"></p>
+        <button class="button button-dark modal-submit" type="submit">Terbitkan Lowongan</button>
+        <p class="demo-notice">Mode MVP: formulir ini belum memakai autentikasi perusahaan.</p>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
