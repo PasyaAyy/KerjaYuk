@@ -96,11 +96,14 @@ Lihat [panduan GitHub tentang grafik kontributor repo](https://docs.github.com/e
 
 Status terakhir diperiksa pada 17 November 2026:
 
-- PR #1 (`chore/kerjayuk-project-baseline` ke `main`) masih terbuka; baseline belum masuk ke `main` dan pemilik repo perlu meninjau serta menggabungkannya.
-- Grafik kontributor branch default saat ini menampilkan `PasyaAyy` dan `garda05`. Anggota lain belum tercatat di riwayat default. Mereka harus membuat commit sendiri setelah baseline masuk ke `main`; jangan membuat commit atas nama mereka.
-- Container aplikasi (`nginx`, `api`, `db`) aktif dan health check Docker berstatus sehat. Jenkins lokal menjawab HTTP 200 pada `/login`.
-- Pemeriksaan lokal terbaru: `pytest` 12 lulus, Ruff lulus, kompilasi Python lulus, dan health API berstatus OK. Ini bukan bukti Jenkins build untuk commit terbaru.
-- GitHub pernah menerima webhook `ping` dengan HTTP 200. Ping hanya memeriksa endpoint; belum ada bukti build Jenkins terbaru yang dipicu oleh event `push` atau `pull_request`.
-- Screenshot Stage View, console log, hasil `docker compose ps`, serta skenario build gagal lalu pulih tetap harus diambil dari pelaksanaan anggota. Jangan menuliskan bukti seolah-olah sudah tersedia.
+- PR #1 (`chore/kerjayuk-project-baseline` ke `main`) sudah digabung. Branch default GitHub dan checkout lokal sekarang `main` pada commit `57decfe8d38fc9599b578d9e3fdf6b8c2d9d122f`.
+- Grafik kontributor GitHub saat ini menampilkan `garda05` dan `PasyaAyy`. Anggota Tech Lead/Backend dan Container Engineer belum tercatat; masing-masing perlu membuat perubahan nyata dengan akun sendiri, lalu mengirim PR ke `main` dan menunggu merge. Jangan membuat commit atas nama mereka.
+- Jenkins Multibranch Pipeline menemukan branch `main`. Build `main` #1 pada commit yang sama berstatus `SUCCESS`; Stage View menunjukkan Checkout, Install test dependencies, Lint, Test, Build project report, Build container, dan Post Actions lulus. Tes Jenkins tidak melaporkan kegagalan dan `docs/laporan.pdf` tersedia sebagai artefak.
+- Tahap `Deploy with Docker Compose` dilewati karena parameter `DEPLOY` default-nya `false`. Ini sesuai konfigurasi; belum ada deploy ke VPS atau hosting publik.
+- Pemindaian berkala Jenkins sudah aktif setiap 5 menit sebagai cadangan karena pemindaian yang terpicu webhook belum terbukti berjalan otomatis setelah merge. Log pemindaian terakhir berakhir `Finished: SUCCESS` dan menemukan `main` pada commit merge.
+- Credential GitHub Jenkins hanya punya akses baca untuk scan. Pipeline sukses, tetapi GitHub menolak publikasi commit status dengan HTTP 403; izin status tidak diperlukan untuk build Jenkins berjalan.
+- Checkout lokal bersih pada `main`. Pemeriksaan lokal menunjukkan 12 tes lulus, Ruff dan kompilasi Python lulus. `api`, `db`, dan `nginx` berstatus sehat; `/health` mengembalikan status API dan database OK. Jenkins juga aktif di Docker.
+- Bukti DevOps tersedia pada job Jenkins: konfigurasi multibranch, Stage View, hasil tes, artefak laporan, console log, dan `docker compose ps`. Bukti skenario pipeline merah lalu hijau tetap perlu dibuat oleh QA/Tech Writer.
+- Ngrok sedang aktif di PC ini. Jenkins lokal hanya dapat diakses selama PC, Docker Desktop, koneksi internet, dan tunnel tetap berjalan.
 
-Pemilik repo mengelola undangan kolaborator, webhook, dan merge karena akses `garda05` bukan admin. Undangan dan PR dapat ditangani melalui situs GitHub; GitHub CLI tidak wajib.
+Akun `garda05` dapat push dan menggabungkan PR, tetapi bukan admin repo sehingga tidak dapat mengelola collaborator, webhook, atau pengaturan repo. Owner/admin menangani undangan anggota dan konfigurasi webhook. GitHub CLI tidak wajib.
