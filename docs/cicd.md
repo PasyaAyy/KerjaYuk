@@ -37,7 +37,15 @@ ngrok http 8080
 
 Salin alamat HTTPS yang ditampilkan Ngrok. Pastikan akun Jenkins memakai password yang kuat sebelum tunnel berjalan; Jenkins hanya terikat ke `127.0.0.1:8080` pada host, sedangkan tunnel membuat URL publik yang meneruskan request ke Jenkins.
 
-Di Jenkins, tambahkan credential tipe **Secret text** untuk secret webhook dengan ID `kerjayuk-github-webhook-secret`. Pada **Manage Jenkins → System → GitHub Plugin Configuration**, pilih credential tersebut sebagai webhook secret dan gunakan SHA-256. Atur Jenkins URL ke alamat HTTPS Ngrok agar tautan build mengarah ke alamat yang bisa dijangkau GitHub.
+Saat Jenkins mulai, script bootstrap membuat credential **Secret text** bernama `kerjayuk-github-webhook-secret`, memasangnya untuk validasi signature SHA-256, lalu menyimpan salinannya di volume data Jenkins. Salin nilai itu ke AppData lokal untuk dimasukkan pada secret webhook GitHub:
+
+```powershell
+$secretDir = Join-Path $env:LOCALAPPDATA 'KerjaYuk'
+New-Item -ItemType Directory -Force $secretDir | Out-Null
+docker cp kerjayuk-jenkins:/var/jenkins_home/secrets/kerjayuk-github-webhook-secret.txt (Join-Path $secretDir 'github-webhook-secret.txt')
+```
+
+Atur Jenkins URL ke alamat HTTPS Ngrok agar tautan build mengarah ke alamat yang bisa dijangkau GitHub.
 
 Di GitHub buka **Settings → Webhooks → Add webhook**, lalu atur:
 
