@@ -20,6 +20,7 @@ if (githubConfiguration.getApiRateLimitChecker() != ApiRateLimitChecker.Throttle
 
 def projectName = 'KerjaYuk'
 def project = jenkins.getItem(projectName)
+def createdProject = project == null
 
 if (project == null) {
     project = jenkins.createProject(WorkflowMultiBranchProject.class, projectName)
@@ -37,5 +38,7 @@ if (project == null) {
     println("${projectName} Multibranch Pipeline already exists; leaving its settings unchanged.")
 }
 
-project.scheduleBuild2(0)
-println("Queued the ${projectName} Multibranch Pipeline scan.")
+if (createdProject) {
+    project.scheduleBuild2(0)
+    println("Queued the initial ${projectName} Multibranch Pipeline scan.")
+}
