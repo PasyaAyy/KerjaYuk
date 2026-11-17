@@ -10,18 +10,13 @@ Jalankan Jenkins pada mesin/agent Linux. Image lokal proyek di [`jenkins/Dockerf
 docker build -f jenkins/Dockerfile -t kerjayuk-jenkins:local .
 ```
 
-Untuk mengganti container Jenkins lokal sambil mempertahankan akun, plugin, job, dan konfigurasi, gunakan volume `kerjayuk_jenkins_home` yang sama:
+Profil `ci` menjalankan Jenkins dengan volume data yang sudah ada serta Docker socket untuk stage build image. Di Docker Desktop Windows, grup socket adalah `0`; di Linux, set `DOCKER_GID` ke GID socket Docker. Container tetap berjalan di `127.0.0.1:8080`:
 
 ```sh
-docker stop kerjayuk-jenkins
-docker rm kerjayuk-jenkins
-docker run -d --name kerjayuk-jenkins --restart unless-stopped \
-  -p 127.0.0.1:8080:8080 \
-  -v kerjayuk_jenkins_home:/var/jenkins_home \
-  kerjayuk-jenkins:local
+docker compose --profile ci up -d --build jenkins
 ```
 
-Jenkins job memerlukan Docker daemon untuk stage `docker compose build`. Berikan akses daemon hanya ke agent build yang dipercaya; akses Docker socket dapat memberi Jenkins kendali luas atas Docker host. Jangan gunakan agent/socket tersebut untuk menjalankan kode PR yang belum dipercaya.
+Jenkins job memerlukan Docker daemon untuk stage `docker compose build`. Akses socket memberi Jenkins kendali luas atas Docker host. Gunakan hanya untuk repo dan pipeline yang dipercaya; periksa Jenkinsfile sebelum menerima PR yang tidak dipercaya.
 
 1. Pilih **New Item → Multibranch Pipeline**.
 2. Tambahkan **GitHub Branch Source**, set owner `PasyaAyy`, dan pilih repo `KerjaYuk`.
