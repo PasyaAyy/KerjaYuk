@@ -4,7 +4,24 @@
 
 ## Persiapan Jenkins
 
-Jalankan Jenkins pada mesin/agent Linux yang memiliki Python 3.12, Docker Engine, dan Docker Compose v2. Agent harus dapat menjalankan container. Pasang plugin **GitHub Branch Source** serta plugin **Pipeline** dan **JUnit** yang diperlukan Jenkins.
+Jalankan Jenkins pada mesin/agent Linux. Image lokal proyek di [`jenkins/Dockerfile`](../jenkins/Dockerfile) menambahkan Python 3.13, Docker CLI/Compose, dan plugin Pipeline, GitHub Branch Source, Stage View, serta JUnit ke image resmi Jenkins. Script `jenkins/init.groovy.d/create-kerjayuk-multibranch.groovy` membuat job `KerjaYuk` saat Jenkins pertama kali memakai volume data. Job membaca public repo tanpa token dan menemukan branch serta pull request yang memiliki Jenkinsfile. Build image tersebut:
+
+```sh
+docker build -f jenkins/Dockerfile -t kerjayuk-jenkins:local .
+```
+
+Untuk mengganti container Jenkins lokal sambil mempertahankan akun, plugin, job, dan konfigurasi, gunakan volume `kerjayuk_jenkins_home` yang sama:
+
+```sh
+docker stop kerjayuk-jenkins
+docker rm kerjayuk-jenkins
+docker run -d --name kerjayuk-jenkins --restart unless-stopped \
+  -p 127.0.0.1:8080:8080 \
+  -v kerjayuk_jenkins_home:/var/jenkins_home \
+  kerjayuk-jenkins:local
+```
+
+Jenkins job memerlukan Docker daemon untuk stage `docker compose build`. Berikan akses daemon hanya ke agent build yang dipercaya; akses Docker socket dapat memberi Jenkins kendali luas atas Docker host. Jangan gunakan agent/socket tersebut untuk menjalankan kode PR yang belum dipercaya.
 
 1. Pilih **New Item → Multibranch Pipeline**.
 2. Tambahkan **GitHub Branch Source**, set owner `PasyaAyy`, dan pilih repo `KerjaYuk`.

@@ -102,6 +102,7 @@ tests/               Tes API dan aturan bisnis
 docs/architecture.md Topologi, model data, endpoint
 docs/cicd.md          Panduan Jenkins dan GitHub Webhook
 docs/pembagian-kontribusi.md Jobdesk, branch, dan pull request tim
+jenkins/              Image Jenkins dan bootstrap Multibranch Pipeline
 docs/laporan.md      Sumber laporan proyek
 docs/laporan.pdf     Laporan PDF siap dibagikan
 alembic.ini          Konfigurasi migrasi skema database
