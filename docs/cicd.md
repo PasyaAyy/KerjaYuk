@@ -4,7 +4,7 @@
 
 ## Persiapan Jenkins
 
-Jalankan Jenkins pada mesin/agent Linux. Image lokal proyek di [`jenkins/Dockerfile`](../jenkins/Dockerfile) menambahkan Python 3.13, Docker CLI/Compose, dan plugin Pipeline, GitHub Branch Source, Stage View, serta JUnit ke image resmi Jenkins. Script `jenkins/init.groovy.d/create-kerjayuk-multibranch.groovy` membuat job `KerjaYuk` saat Jenkins pertama kali memakai volume data. Job membaca public repo tanpa token dan menemukan branch serta pull request yang memiliki Jenkinsfile. Build image tersebut:
+Jalankan Jenkins pada Docker Desktop dengan Linux containers atau Docker Engine. Image lokal proyek di [`jenkins/Dockerfile`](../jenkins/Dockerfile) menambahkan Python 3.13, Docker CLI/Compose, serta plugin Pipeline, GitHub, GitHub Branch Source, Stage View, dan JUnit. Script `jenkins/init.groovy.d/create-kerjayuk-multibranch.groovy` membuat job `KerjaYuk` saat Jenkins pertama kali memakai volume data. Job menemukan branch serta pull request yang memiliki Jenkinsfile. Untuk pemindaian cepat dan status build GitHub, tambahkan fine-grained token yang dibatasi ke repo `KerjaYuk` sebagai credential Jenkins; jangan simpan token dalam source code. Build image Jenkins:
 
 ```sh
 docker build -f jenkins/Dockerfile -t kerjayuk-jenkins:local .
@@ -20,17 +20,35 @@ Jenkins job memerlukan Docker daemon untuk stage `docker compose build`. Akses s
 
 1. Pilih **New Item → Multibranch Pipeline**.
 2. Tambahkan **GitHub Branch Source**, set owner `PasyaAyy`, dan pilih repo `KerjaYuk`.
-3. Untuk repo private, simpan credential akses GitHub dengan izin minimum di **Manage Jenkins → Credentials**, lalu pilih credential itu di Branch Source. Repo publik bisa dipindai tanpa token yang ditaruh di source code.
+3. Buat fine-grained token yang dibatasi ke `KerjaYuk` dengan izin metadata dan pull requests read-only; simpan sebagai credential Jenkins dan pilih sebagai Scan Credential. Tambahkan izin commit status bila Jenkins perlu mengirim status build kembali ke GitHub.
 4. Aktifkan discovery untuk branch dan pull request. Jenkins Multibranch akan mencari `Jenkinsfile` dari branch/PR yang ditemukan dan membuat job pipeline per branch.
-5. Di **Scan Multibranch Pipeline Triggers**, aktifkan pemindaian berkala agar branch baru tetap ditemukan jika webhook belum siap.
+5. Gunakan webhook untuk pemindaian segera; pilih pemindaian berkala hanya sebagai fallback.
 
 Dokumentasi Jenkins menjelaskan setup Multibranch dan penemuan branch/PR di [Branches and Pull Requests](https://www.jenkins.io/doc/book/pipeline/multibranch/) dan [Pipeline as Code](https://www.jenkins.io/doc/book/pipeline/pipeline-as-code/).
 
 ## GitHub Webhook melalui Ngrok
 
-Jenkins harus punya URL HTTPS yang dapat dijangkau GitHub. Untuk demo di komputer lokal, Ngrok dapat meneruskan port Jenkins, misalnya `ngrok http 8080`; gunakan hostname HTTPS yang diberikan Ngrok sebagai URL Jenkins eksternal. Di GitHub repo buka **Settings → Webhooks → Add webhook**, masukkan endpoint webhook yang ditampilkan plugin Jenkins. Endpoint umum GitHub plugin berbentuk `https://HOST-JENKINS/github-webhook/`; cek endpoint aktual pada konfigurasi Jenkins sebelum mendaftarkan. Pilih payload JSON dan event push/pull request yang sesuai sumber branch Jenkins.
+Ngrok memerlukan akun dan authtoken. Setelah authtoken tersedia, simpan di konfigurasi lokal Ngrok lalu jalankan tunnel:
 
-Simpan Ngrok authtoken dan GitHub token sebagai credentials/environment secrets lokal atau di Jenkins Credentials. Jangan taruh token, password, atau URL bertoken di `Jenkinsfile`, `.env.example`, log, atau commit. Batasi akses Jenkins dengan akun dan izin yang sesuai sebelum mengeksposnya melalui tunnel.
+```powershell
+ngrok config add-authtoken <AUTHTOKEN_DARI_DASHBOARD_NGROK>
+ngrok http 8080
+```
+
+Salin alamat HTTPS yang ditampilkan Ngrok. Pastikan akun Jenkins memakai password yang kuat sebelum tunnel berjalan; Jenkins hanya terikat ke `127.0.0.1:8080` pada host, sedangkan tunnel membuat URL publik yang meneruskan request ke Jenkins.
+
+Di Jenkins, tambahkan credential tipe **Secret text** untuk secret webhook dengan ID `kerjayuk-github-webhook-secret`. Pada **Manage Jenkins → System → GitHub Plugin Configuration**, pilih credential tersebut sebagai webhook secret dan gunakan SHA-256. Atur Jenkins URL ke alamat HTTPS Ngrok agar tautan build mengarah ke alamat yang bisa dijangkau GitHub.
+
+Di GitHub buka **Settings → Webhooks → Add webhook**, lalu atur:
+
+- Payload URL: `https://<HOST_NGROK>/github-webhook/`
+- Content type: `application/json`
+- Secret: nilai yang sama dengan credential webhook Jenkins
+- Events: **Pushes** dan **Pull requests**
+
+Klik **Add webhook**, lalu gunakan **Recent Deliveries → Redeliver** untuk memeriksa respons. GitHub Branch Source memproses event dari endpoint `/github-webhook/` dan memperbarui indeks branch/PR. Untuk mengurangi jeda API anonim, simpan token GitHub fine-grained terbatas untuk repo `KerjaYuk` sebagai Jenkins credential dan pilih di konfigurasi sumber GitHub job.
+
+Jangan taruh Ngrok authtoken, GitHub token, webhook secret, atau URL bertoken di `Jenkinsfile`, `.env.example`, log, atau commit. Hentikan tunnel setelah sesi demo bila tidak diperlukan.
 
 ## Build dan deploy
 
@@ -38,4 +56,4 @@ Simpan Ngrok authtoken dan GitHub token sebagai credentials/environment secrets 
 - Tes menggunakan SQLite sementara; tahap test tidak memerlukan database production.
 - Deploy Compose tidak otomatis. Untuk demo, jalankan build branch `main` dan aktifkan parameter `DEPLOY` setelah memeriksa hasil tes. Service memakai named volume untuk database dan CV.
 - Deploy memerlukan agent dengan Docker daemon yang menjalankan stack tersebut serta file environment yang disiapkan dengan secret lokal. Jangan gunakan password contoh untuk deployment yang dapat diakses orang lain.
-- Tahap pipeline telah disiapkan, tetapi webhook Jenkins belum diaktifkan pada repo ini karena belum ada instance Jenkins/credential terhubung.
+- Sebelum webhook dan pemindaian API terhubung, pipeline tetap dapat dipindai manual dari **Scan Multibranch Pipeline Now**. Jalankan tunnel hanya selama pengujian webhook.

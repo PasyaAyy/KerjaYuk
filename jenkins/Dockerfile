@@ -15,7 +15,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN jenkins-plugin-cli --plugins \
-    "workflow-aggregator github-branch-source pipeline-stage-view junit"
+    "workflow-aggregator github github-branch-source pipeline-stage-view junit"
 
 COPY jenkins/init.groovy.d /usr/share/jenkins/ref/init.groovy.d
 
