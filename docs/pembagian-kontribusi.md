@@ -99,6 +99,7 @@ Status terakhir diperiksa pada 17 November 2026:
 - PR #1 (`chore/kerjayuk-project-baseline` ke `main`) masih terbuka; baseline belum masuk ke `main` dan pemilik repo perlu meninjau serta menggabungkannya.
 - Grafik kontributor branch default saat ini menampilkan `PasyaAyy` dan `garda05`. Anggota lain belum tercatat di riwayat default. Mereka harus membuat commit sendiri setelah baseline masuk ke `main`; jangan membuat commit atas nama mereka.
 - Container aplikasi (`nginx`, `api`, `db`) aktif dan health check Docker berstatus sehat. Jenkins lokal menjawab HTTP 200 pada `/login`.
+- Pemeriksaan lokal terbaru: `pytest` 12 lulus, Ruff lulus, kompilasi Python lulus, dan health API berstatus OK. Ini bukan bukti Jenkins build untuk commit terbaru.
 - GitHub pernah menerima webhook `ping` dengan HTTP 200. Ping hanya memeriksa endpoint; belum ada bukti build Jenkins terbaru yang dipicu oleh event `push` atau `pull_request`.
 - Screenshot Stage View, console log, hasil `docker compose ps`, serta skenario build gagal lalu pulih tetap harus diambil dari pelaksanaan anggota. Jangan menuliskan bukti seolah-olah sudah tersedia.
 
