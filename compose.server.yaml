@@ -1,0 +1,18 @@
+services:
+  caddy:
+    image: caddy:2
+    profiles: [server]
+    restart: unless-stopped
+    env_file:
+      - .env.server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

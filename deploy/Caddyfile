@@ -1,0 +1,9 @@
+{$JENKINS_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy jenkins:8080
+}
+
+{$APP_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy nginx:80
+}

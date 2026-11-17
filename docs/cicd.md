@@ -60,6 +60,21 @@ Klik **Add webhook**, lalu gunakan **Recent Deliveries → Redeliver** untuk mem
 
 Jangan taruh Ngrok authtoken, GitHub token, webhook secret, atau URL bertoken di `Jenkinsfile`, `.env.example`, log, atau commit. Hentikan tunnel setelah sesi demo bila tidak diperlukan.
 
+## Jenkins permanen di server
+
+Jenkins di komputer lokal hanya tersedia saat komputer dan Docker Desktop aktif. Agar dapat dibuka dari perangkat lain kapan saja, jalankan stack ini pada Linux VPS/server yang selalu aktif dan gunakan domain tetap. Konfigurasi `compose.server.yaml` menambahkan Caddy sebagai reverse proxy HTTPS untuk Jenkins dan aplikasi; data Caddy, Jenkins, PostgreSQL, serta CV memakai named volume. Port Jenkins `8080` dan aplikasi `8000` hanya terikat ke loopback; akses web dari internet masuk melalui port 80/443.
+
+Siapkan server Linux dengan Docker Compose, domain dengan DNS A/AAAA menuju IP server, serta firewall yang membuka port 80/443 dan SSH terbatas untuk admin. Di server, clone repo, salin `.env.example` menjadi `.env`, isi password database yang kuat, salin `.env.server.example` menjadi `.env.server`, lalu ganti kedua domain dengan hostname yang benar. Jalankan:
+
+```sh
+docker volume create kerjayuk_jenkins_home
+docker compose -f compose.yaml -f compose.server.yaml --profile ci --profile server up -d --build
+```
+
+Caddy memperoleh dan memperbarui sertifikat otomatis setelah DNS mengarah ke server dan port 80/443 dapat dijangkau dari internet. Data sertifikat disimpan di volume `caddy_data`; dokumentasi [Automatic HTTPS Caddy](https://caddyserver.com/docs/automatic-https) menjelaskan syarat DNS dan portnya. Pastikan pengaturan **Jenkins URL** memakai `https://<JENKINS_DOMAIN>/` sesuai domain proxy. Jenkins harus tetap memakai login; jangan membuka port 8080 atau Docker socket ke internet.
+
+Compose memakai nama project tetap `kerjayuk`, sehingga deploy dari Jenkinsfile menargetkan stack dan named volume yang sama. Perintah di atas membuat Jenkins home baru; riwayat build dan credential dari Docker volume di laptop tidak ikut berpindah. Pertahankan Jenkins lokal sampai server baru siap, lalu migrasikan volume secara aman hanya jika Anda perlu mempertahankan riwayat/credential tersebut. Server baru membuat webhook secret sendiri. Tambahkan credential GitHub scan di Jenkins, lalu minta owner/admin repo membuat webhook ke `https://<JENKINS_DOMAIN>/github-webhook/` memakai secret dari `/var/jenkins_home/secrets/kerjayuk-github-webhook-secret.txt`. Setelah endpoint permanen terverifikasi, tunnel Ngrok lokal tidak diperlukan lagi. Lindungi named volume dan buat backup berkala; volume menyimpan konfigurasi Jenkins, credential terenkripsi, database, dan file CV.
+
 ## Build dan deploy
 
 - Setiap branch/PR menjalankan lint, kompilasi, tes, pembuatan laporan, dan build kedua image.
