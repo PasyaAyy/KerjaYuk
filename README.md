@@ -4,6 +4,8 @@ Portal lowongan magang dan kerja paruh waktu untuk Tugas Besar 1 Komputasi Awan 
 
 Laporan proyek siap dibaca di [docs/laporan.pdf](docs/laporan.pdf), dengan sumber Markdown di [docs/laporan.md](docs/laporan.md).
 
+![Pratinjau antarmuka KerjaYuk](docs/portal-preview.png)
+
 ## Fitur
 
 - Jelajahi lowongan aktif dan cari berdasarkan judul/deskripsi, lokasi, dan tipe kerja.

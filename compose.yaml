@@ -20,7 +20,12 @@ services:
   api:
     build: .
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-kerjayuk}:${POSTGRES_PASSWORD:-change-me}@db:5432/${POSTGRES_DB:-kerjayuk}}
+      DATABASE_URL: ${DATABASE_URL:-}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: ${POSTGRES_DB:-kerjayuk}
+      POSTGRES_USER: ${POSTGRES_USER:-kerjayuk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
       CV_STORAGE_PATH: /data/cv
     volumes:
       - cv_data_volume:/data/cv

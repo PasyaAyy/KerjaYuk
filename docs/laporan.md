@@ -49,7 +49,7 @@ Urutan stage pipeline: **Checkout → Install dependencies → Lint/compile → 
 | Muhammad Naufal Syamdany (102062400100) | Container Engineer: Dockerfile, Compose, `.env.example`, dan health checks | Konfigurasi file dan output `docker compose ps` |
 | Pasya Ayu Rastiti (102062400004) | QA Engineer & Tech Writer: unit/feature tests, skenario pipeline gagal-pulih, README, diagram pipeline, dan laporan | File test, bukti pipeline merah lalu hijau, README, diagram, serta laporan PDF |
 
-Bukti runtime Jenkins dan pull request perlu diisi dari eksekusi serta riwayat GitHub yang sebenarnya; tabel ini mencatat target bukti dan tidak mengklaim bukti tersebut sudah tersedia.
+Status bukti pada 17 November 2026: baseline implementasi sudah tersedia di PR #1 menuju `main`, tetapi PR masih menunggu pemilik repo. Docker Compose menjalankan `nginx`, `api`, dan `db`; Jenkins lokal dapat dibuka. GitHub telah menerima webhook `ping` dengan HTTP 200, tetapi ping tidak menjalankan pipeline dan belum ada bukti build untuk push terbaru. Commit anggota lain, screenshot Stage View/console, dan bukti build gagal lalu pulih harus berasal dari pekerjaan serta eksekusi mereka sendiri.
 
 ## Menjalankan demo
 
