@@ -94,27 +94,22 @@ Lihat [panduan GitHub tentang grafik kontributor repo](https://docs.github.com/e
 
 ## Status penyelesaian dan bukti
 
-Status snapshot diperiksa pada 17 November 2026 sebelum pekerjaan anggota berikutnya:
+Audit terakhir: 17 November 2026, setelah PR #4 digabung.
 
-- PR #1 (baseline), PR #2 (pembaruan status), dan PR #3 (alur kerja tim) sudah digabung. Branch default GitHub dan checkout lokal `main` saat pemeriksaan ada pada commit `0eac8615742bba8a1d71665c52537e894b8666eb`.
-- Grafik kontributor GitHub saat ini menampilkan `garda05` dan `PasyaAyy`. Anggota Tech Lead/Backend dan Container Engineer belum tercatat; masing-masing perlu membuat perubahan nyata dengan akun sendiri, lalu mengirim PR ke `main` dan menunggu merge. Jangan membuat commit atas nama mereka.
-- Jenkins Multibranch Pipeline menemukan branch `main`. Build #3 dan #4 pada commit tersebut berstatus `SUCCESS`; Stage View menunjukkan Checkout, Install test dependencies, Lint, Test, Build project report, Build container, dan Post Actions lulus. Tes Jenkins melaporkan 12 lulus dan `docs/laporan.pdf` tersedia sebagai artefak.
-- Tahap `Deploy with Docker Compose` dilewati karena parameter `DEPLOY` default-nya `false`. Ini sesuai konfigurasi; belum ada deploy ke VPS atau hosting publik.
-- Pemindaian berkala Jenkins aktif setiap 5 menit sebagai cadangan. Respons webhook push perlu dibuktikan dari delivery GitHub dan log Ngrok/Jenkins; jangan menganggap koneksi sudah teruji hanya dari konfigurasi atau event `ping`.
-- Credential GitHub Jenkins hanya punya akses baca untuk scan. Pipeline sukses, tetapi GitHub menolak publikasi commit status dengan HTTP 403; izin status tidak diperlukan untuk build Jenkins berjalan.
-- Checkout lokal bersih pada `main`. Pemeriksaan lokal menunjukkan 12 tes lulus, Ruff dan kompilasi Python lulus. `api`, `db`, dan `nginx` berstatus sehat; `/health` mengembalikan status API dan database OK. Jenkins juga aktif di Docker.
-- Bukti DevOps tersedia pada job Jenkins: konfigurasi multibranch, Stage View, hasil tes, artefak laporan, console log, dan `docker compose ps`. Bukti skenario pipeline merah lalu hijau tetap perlu dibuat oleh QA/Tech Writer.
-- Ngrok sedang aktif di PC ini. Jenkins lokal hanya dapat diakses selama PC, Docker Desktop, koneksi internet, dan tunnel tetap berjalan.
+- PR #1 sampai #4 sudah digabung ke `main`. Commit terbaru saat audit: `9fda5b013cb28aa8c0d70d72d3ce0672f77356c2`.
+- Jenkins Multibranch mengenali PR #4 dan `main`. Build PR #4 #1 dan `main` #5 berstatus `SUCCESS`; build `main` #5 menggunakan commit `9fda5b0`. Tes lokal sebelumnya: 12 lulus, Ruff dan kompilasi Python lulus. Artefak `docs/laporan.pdf` tersedia dari pipeline.
+- Riwayat Jenkins pada branch baseline mencatat build gagal #1 dan #2, lalu berhasil mulai #3. Ini memberi riwayat pemulihan merah-ke-hijau; QA/Tech Writer tetap perlu menyimpan screenshot Stage View/console merah dan hijau untuk laporan.
+- `api`, `db`, dan `nginx` aktif dan sehat. `GET /health` mengembalikan `status: ok` dan `database: ok`.
+- Baseline `main` sudah memuat tugas inti semua peran: endpoint, aturan bisnis, migrasi dan seeder; Dockerfile, Compose, contoh env dan health check; tes, README, diagram pipeline, serta laporan PDF.
+- Jenkins memindai branch berkala setiap menit sebagai fallback. Build berhasil tanpa webhook, tetapi pengiriman webhook push GitHub belum terkonfirmasi: inspector Ngrok hanya menunjukkan request UI Jenkins, tidak ada POST ke `/github-webhook/`.
+- Ngrok gratis berjalan di PC ini dan URL-nya dapat berubah saat tunnel dimulai ulang. Akun `garda05` bukan admin repo, jadi owner/admin perlu memeriksa **Settings > Webhooks > Recent Deliveries** dan memastikan URL mengarah ke tunnel aktif dengan path `/github-webhook/`, event `Pushes`, serta delivery HTTP 200. Jangan mengganti secret jika delivery sudah cocok.
+- Credential scan GitHub Jenkins bersifat read-only. GitHub menolak publikasi commit status dengan HTTP 403; hal ini tidak menghentikan pipeline Jenkins.
+- Tahap deploy publik tidak dijalankan (`DEPLOY=false`) karena belum ada VPS/domain. Aplikasi belum memiliki autentikasi; jalankan lokal dan jangan diekspos ke internet.
 
-## Sisa aksi pribadi sebelum pengumpulan
+## Sisa yang wajib dilakukan tim
 
-Kode baseline untuk semua peran sudah ada di `main`. Agar dua anggota yang belum muncul di grafik kontributor punya kontribusi nyata, gunakan pekerjaan kecil berikut sebagai starting point; ubah, uji, dan pahami hasilnya sebelum membuat commit sendiri:
+Grafik GitHub saat ini hanya menampilkan `garda05` dan `PasyaAyy`. Anggota Tech Lead/Backend dan Container Engineer masih perlu tercatat. Kode baseline untuk tanggung jawab utama mereka sudah tersedia di `main`; mereka tidak perlu menambah fitur besar baru untuk memenuhi pembagian peran.
 
-- **Tech Lead / Backend:** tambahkan pagination `limit` dan `offset` yang dibatasi pada `GET /api/v1/jobs`, beserta tes filter dan dokumentasi parameter API.
-- **Container Engineer:** rapikan `.dockerignore` agar cache tes/lint, PDF laporan, database/CV lokal, dan file coverage tidak masuk build context; verifikasi dengan `docker compose build` dan `docker compose ps`.
-- **QA Engineer & Tech Writer:** di branch sementara miliknya, buat satu commit tes yang sengaja gagal, jalankan sampai Jenkins merah, perbaiki tes di commit berikutnya, lalu jalankan sampai hijau. Jangan merge keadaan gagal; simpan screenshot kedua hasil.
-- **DevOps Engineer:** simpan screenshot konfigurasi Multibranch, Stage View hijau, console log, dan hasil `docker compose ps`. Buktikan webhook lewat satu delivery **push** yang HTTP 200 dan scan/build Jenkins yang sesuai; pemindaian berkala tetap menjadi fallback.
+Supaya kontribusi terhubung ke akun yang benar, masing-masing anggota yang belum tercatat perlu membuat satu perubahan kecil yang nyata di area perannya, commit dengan nama dan email GitHub milik sendiri, push branch, lalu memastikan PR-nya digabung ke `main`. Push branch saja belum cukup; jangan gunakan empty commit atau mengubah author commit orang lain. Gunakan merge commit atau rebase merge agar commit anggota tetap terlihat. Grafik GitHub dapat memerlukan hingga 24 jam untuk diperbarui.
 
-Untuk dua anggota yang belum terhitung, push branch saja belum cukup untuk masuk grafik kontributor: mereka harus memakai akun dan email GitHub sendiri, membuat commit berisi perubahan nyata, lalu memastikan commit itu masuk ke `main` lewat PR yang di-merge. Jangan gunakan empty commit atau mengubah identitas author commit lama.
-
-Akun `garda05` dapat push dan menggabungkan PR, tetapi bukan admin repo sehingga tidak dapat mengelola collaborator, webhook, atau pengaturan repo. Owner/admin menangani undangan anggota dan konfigurasi webhook. GitHub CLI tidak wajib.
+Bukti yang masih perlu dikumpulkan adalah screenshot build QA gagal/pulih dan satu delivery webhook push resmi. Owner/admin repo perlu memeriksa Recent Deliveries dan membenahi URL tunnel aktif bila perlu. Sambil menunggu, pemindaian Jenkins tiap menit tetap menjalankan CI untuk perubahan branch.
