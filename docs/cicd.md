@@ -10,13 +10,16 @@ Jalankan Jenkins pada Docker Desktop dengan Linux containers atau Docker Engine.
 docker build -f jenkins/Dockerfile -t kerjayuk-jenkins:local .
 ```
 
-Profil `ci` menjalankan Jenkins dengan volume data yang sudah ada serta Docker socket untuk stage build image. Di Docker Desktop Windows, grup socket adalah `0`; di Linux, set `DOCKER_GID` ke GID socket Docker. Container tetap berjalan di `127.0.0.1:8080`:
+Profil `ci` menjalankan Jenkins dengan volume data persisten serta Docker socket untuk stage build image. Buat volume terlebih dahulu, lalu jalankan Jenkins. Di Docker Desktop Windows, grup socket adalah `0`; di Linux, set `DOCKER_GID` ke GID socket Docker. Container tetap berjalan di `127.0.0.1:8080`:
 
 ```sh
+docker volume create kerjayuk_jenkins_home
 docker compose --profile ci up -d --build jenkins
 ```
 
 Jenkins job memerlukan Docker daemon untuk stage `docker compose build`. Akses socket memberi Jenkins kendali luas atas Docker host. Gunakan hanya untuk repo dan pipeline yang dipercaya; periksa Jenkinsfile sebelum menerima PR yang tidak dipercaya.
+
+Saat memakai image proyek pada volume Jenkins baru, bootstrap Groovy membuat item multibranch `KerjaYuk` otomatis. Pada Jenkins yang sudah memiliki volume atau item Jenkins sendiri, buat item melalui **New Item > Multibranch Pipeline** jika belum ada.
 
 1. Pilih **New Item → Multibranch Pipeline**.
 2. Tambahkan **GitHub Branch Source**, set owner `PasyaAyy`, dan pilih repo `KerjaYuk`.
