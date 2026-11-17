@@ -37,6 +37,8 @@ ngrok http 8080
 
 Salin alamat HTTPS yang ditampilkan Ngrok. Pastikan akun Jenkins memakai password yang kuat sebelum tunnel berjalan; Jenkins hanya terikat ke `127.0.0.1:8080` pada host, sedangkan tunnel membuat URL publik yang meneruskan request ke Jenkins.
 
+> Pembuatan atau perubahan webhook repository memerlukan akses owner/admin; akses `push` saja tidak cukup. Jika URL Ngrok berubah, perbarui Payload URL webhook dan Jenkins URL memakai alamat HTTPS yang sedang aktif.
+
 Saat Jenkins mulai, script bootstrap membuat credential **Secret text** bernama `kerjayuk-github-webhook-secret`, memasangnya untuk validasi signature SHA-256, lalu menyimpan salinannya di volume data Jenkins. Salin nilai itu ke AppData lokal untuk dimasukkan pada secret webhook GitHub:
 
 ```powershell
